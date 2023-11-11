@@ -48,8 +48,19 @@ void insert(node_t** root, int value){
 }
 
 /*검색*/
-void search(node_t *root, int value){
+node_t* search(node_t* root, int value){
+    if (root == NULL || root->value == value) {
+        
+        return root;
+    }
+        
+    if (value < root->value){
+        
+        return search(root->left, value);
+    }else {
 
+        return search(root->right, value);
+    }
 }
 
 /*삭제*/
@@ -68,20 +79,38 @@ void traversal(node_t* root){
 
 int main(void){
     node_t* root = NULL;
-    
-    srand(time(NULL)); 
-    for(int i = 0; i < 8; i++){
-        int randomValue = (rand() % 11) * 4;
-        insert(&root, randomValue);
-        printf(" %d ", randomValue);
-    }
-    printf("\n");
 
+        
+    /*삽입 및 생성*/
+    int arr[10] = {20, 72, 1, 18, 87, 36, 9, 96, 15, 56}; 
+    for(int i = 0; i < 10; ++i)
+    {
+        insert(&root, arr[i]);
+    }
+
+    /*출력*/
     printf("트리 중위 순회 결과 : ");
     traversal(root);
     printf("\n");
 
-    /*소멸*/
+    /*검색 테스트*/
+    node_t* found = search(root, 9);
+    if (found != NULL) {
+        printf("값 9을 찾았습니다\n");
+    } else {
+        printf("값 9을 찾지 못했습니다.\n");
+    }
+
+    found = search(root, 100);
+    if (found != NULL) {
+        printf("값 100을 찾았습니다\n");
+    } else {
+        printf("값 100을 찾지 못했습니다.\n");
+    }
+
+
+
+    /*트리 소멸*/
     free_tree(root);
     return 0;
 }
