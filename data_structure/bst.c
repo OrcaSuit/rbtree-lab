@@ -34,18 +34,20 @@ void free_tree(node_t* root) {
 }
 
 /*삽입, 루트노드의 존재를 확인 후 현재 노드보다 작으면 왼쪽, 크면 오른쪽에 노드를 생성해 삽입.*/
-void insert(node_t** root, int value){  
-    if (*root == NULL) {
-        *root = create_node(value);
-        return;
+node_t* insert(node_t* root, int value) {
+    if (root == NULL) {
+        return create_node(value);
     }
 
-    if (value < (*root)->value) { 
-        insert(&((*root)->left), value); 
+    if (value < root->value) {
+        root->left = insert(root->left, value);
     } else {
-        insert(&((*root)->right), value);
+        root->right = insert(root->right, value);
     }
+
+    return root;
 }
+
 
 /*검색*/
 node_t* search(node_t* root, int value){
@@ -57,15 +59,16 @@ node_t* search(node_t* root, int value){
     if (value < root->value){
         
         return search(root->left, value);
-    }else {
+    }else 
+    {
 
         return search(root->right, value);
     }
 }
 
 /*삭제*/
-void deletion(){
-    
+node_t* delete(node_t* root, int value){
+
 }
 
 /*순회*/
@@ -82,16 +85,15 @@ int main(void){
 
         
     /*삽입 및 생성*/
-    int arr[10] = {20, 72, 1, 18, 87, 36, 9, 96, 15, 56}; 
-    for(int i = 0; i < 10; ++i)
-    {
-        insert(&root, arr[i]);
+    int arr[10] = {20, 72, 1, 18, 87, 36, 9, 96, 15, 56};
+    for(int i = 0; i < 10; ++i) {
+        root = insert(root, arr[i]);
     }
 
     /*출력*/
     printf("트리 중위 순회 결과 : ");
     traversal(root);
-    printf("\n");
+    printf("\n");   
 
     /*검색 테스트*/
     node_t* found = search(root, 9);
@@ -107,8 +109,6 @@ int main(void){
     } else {
         printf("값 100을 찾지 못했습니다.\n");
     }
-
-
 
     /*트리 소멸*/
     free_tree(root);
