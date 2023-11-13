@@ -85,7 +85,7 @@ node_t* delete(node_t* node, int value) {
         }
         // 경우 3 : 자식이 둘인 경우
         else { 
-            //왼쪽 서브트리에서 가장 큰 값을 찾아 대체
+            //오른쪽 서브트리에서 가장 작은 값을 찾아 대체
             node_t* temp = find_min(node->right);
             node->value = temp->value;
             node->left = delete(node->left, temp->value);
