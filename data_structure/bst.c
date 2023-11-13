@@ -25,81 +25,106 @@ node_t* create_node(int value){
 }
 
 /*소멸자*/
-void free_tree(node_t* root) {
-    if (root != NULL) {
-        free_tree(root->left);
-        free_tree(root->right);
-        free(root);
+void free_tree(node_t* node) {
+    if (node != NULL) {
+        free_tree(node->left);
+        free_tree(node->right);
+        free(node);
     }
 }
 
 /*삽입, 루트노드의 존재를 확인 후 현재 노드보다 작으면 왼쪽, 크면 오른쪽에 노드를 생성해 삽입.*/
-node_t* insert(node_t* root, int value) {
-    if (root == NULL) {
+node_t* insert(node_t* node, int value) {
+    if (node == NULL) {
         return create_node(value);
     }
 
-    if (value < root->value) {
-        root->left = insert(root->left, value);
+    if (value < node->value) {
+        node->left = insert(node->left, value);
     } else {
-        root->right = insert(root->right, value);
+        node->right = insert(node->right, value);
     }
 
-    return root;
+    return node;
 }
 
+node_t* find_max(node_t* node) {
+    while (node->right != NULL) {
+        node = node->right;
+    }
+    return node;
+}
 
 /*삭제*/
-node_t* delete(node_t* root, int value) {
-    if (root == NULL) {
-        return root;
+node_t* delete(node_t* node, int value) {
+    if (node == NULL) {
+        return node;
     }
 
     //삭제할 노드 찾기
-    if (value < root->value) {
-        root->left = delete(root->left, value);
-    } else if (value > root->value) {
-        root->right = delete(root->right, value);
+    if (value < node->value) {
+        node->left = delete(node->left, value);
+    } else if (value > node->value) {
+        node->right = delete(node->right, value);
     } else {
         //삭제할 노드를 찾은 경우
-
         // 경우 1 : 리프 노드인 경우
-        if (root->left == NULL && root->right == NULL) {
-            free(root);
-            root = NULL;
+        if (node->left == NULL && node->right == NULL) {
+            free(node);
+            node = NULL;
+        } 
+        // 경우 2 : 자식이 하나인 경우
+        else if (node->left == NULL){
+            node_t* temp = node;
+            node = node->right;
+            free(temp);
+        } else if (node->right == NULL){
+            node_t* temp = node;
+            node = node->left;
+            free(temp);
+        }
+        // 경우 3 : 자식이 둘인 경우
+        else { 
+            //왼쪽 서브트리에서 가장 큰 값을 찾아 대체
+            node_t* temp = find_max(node->left);
+            node->value = temp->value;
+            node->left = delete(node->left, temp->value);
         }
     }
+
+    return node;
 }
 
+
+
 /*검색*/
-node_t* search(node_t* root, int value){
-    if (root == NULL || root->value == value) {
+node_t* search(node_t* node, int value){
+    if (node == NULL || node->value == value) {
         
-        return root;
+        return node;
     }
         
-    if (value < root->value){
+    if (value < node->value){
         
-        return search(root->left, value);
+        return search(node->left, value);
     }else 
     {
 
-        return search(root->right, value);
+        return search(node->right, value);
     }
 }
 
 /*순회*/
-void traversal(node_t* root){
-    if (root != NULL) {
-        traversal(root->left);
-        printf(" %d ", root->value);
-        traversal(root->right);
+void traversal(node_t* node){
+    if (node != NULL) {
+        traversal(node->left);
+        printf(" %d ", node->value);
+        traversal(node->right);
     }
 }
 
 int main(void){
     node_t* root = NULL;
-
         
     /*삽입 및 생성*/
     int arr[10] = {20, 72, 1, 18, 87, 36, 9, 96, 15, 56};
@@ -125,6 +150,21 @@ int main(void){
         printf("값 100을 찾았습니다\n");
     } else {
         printf("값 100을 찾지 못했습니다.\n");
+    }
+
+    /*삭제 테스트*/
+    root = delete(root, 18);
+
+    printf("트리 중위 순회 결과 : ");
+    traversal(root);
+    printf("\n");   
+
+    /*검색 테스트*/
+    found = search(root, 18);
+    if(found != NULL) {
+        printf("값 18을 찾았습니다.");
+    } else {
+        printf("값 18을 찾지 못했습니다.");
     }
 
     /*트리 소멸*/
