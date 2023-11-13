@@ -3,10 +3,10 @@
 #include<time.h>
 
 /* 각 노드는 데이터, 왼쪽 자식 노드에 대한 참조, 오른쪽 자식 노드에 대한 참조를 가짐*/
-typedef struct node {
+typedef struct node_t {
     int value;
-    struct node* left;
-    struct node* right;
+    struct node_t* left;
+    struct node_t* right;
 } node_t;
 
 /*생성자*/
@@ -49,6 +49,28 @@ node_t* insert(node_t* root, int value) {
 }
 
 
+/*삭제*/
+node_t* delete(node_t* root, int value) {
+    if (root == NULL) {
+        return root;
+    }
+
+    //삭제할 노드 찾기
+    if (value < root->value) {
+        root->left = delete(root->left, value);
+    } else if (value > root->value) {
+        root->right = delete(root->right, value);
+    } else {
+        //삭제할 노드를 찾은 경우
+
+        // 경우 1 : 리프 노드인 경우
+        if (root->left == NULL && root->right == NULL) {
+            free(root);
+            root = NULL;
+        }
+    }
+}
+
 /*검색*/
 node_t* search(node_t* root, int value){
     if (root == NULL || root->value == value) {
@@ -64,11 +86,6 @@ node_t* search(node_t* root, int value){
 
         return search(root->right, value);
     }
-}
-
-/*삭제*/
-node_t* delete(node_t* root, int value){
-
 }
 
 /*순회*/
