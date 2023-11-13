@@ -48,9 +48,9 @@ node_t* insert(node_t* node, int value) {
     return node;
 }
 
-node_t* find_max(node_t* node) {
-    while (node->right != NULL) {
-        node = node->right;
+node_t* find_min(node_t* node) {
+    while (node->left != NULL) {
+        node = node->left;
     }
     return node;
 }
@@ -86,7 +86,7 @@ node_t* delete(node_t* node, int value) {
         // 경우 3 : 자식이 둘인 경우
         else { 
             //왼쪽 서브트리에서 가장 큰 값을 찾아 대체
-            node_t* temp = find_max(node->left);
+            node_t* temp = find_min(node->right);
             node->value = temp->value;
             node->left = delete(node->left, temp->value);
         }
@@ -154,12 +154,11 @@ int main(void){
 
     /*삭제 테스트*/
     root = delete(root, 18);
-
     printf("트리 중위 순회 결과 : ");
     traversal(root);
     printf("\n");   
 
-    /*검색 테스트*/
+    /*삭제 후 검색 테스트*/
     found = search(root, 18);
     if(found != NULL) {
         printf("값 18을 찾았습니다.");
