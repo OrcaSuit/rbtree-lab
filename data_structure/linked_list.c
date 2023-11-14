@@ -7,7 +7,14 @@ typedef struct node_t {
 
 void print_node(const node_t* head)
 {
+    node_t* p;
 
+    p = head;
+    while( p != NULL ){
+      printf("%d", p->data);
+      p = p->next;
+    }
+    
 }
 
 void destroy(node_t* head)
