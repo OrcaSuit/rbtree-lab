@@ -1,56 +1,51 @@
 #include<stdio.h>
+#include<stdlib.h>
 
-typedef struct node_t {
-    int data;
-    node_t* next;
-}node_t;
+typedef struct node {
+    int val;
+    struct node* next;
+} node_t;
 
-void print_node(const node_t* head)
-{
-    node_t* p;
-
-    p = head;
-    while( p != NULL){
-        printf("%d", p->data);
-        p = p->next;
+void insert_front(node_t** phead, int n) {
+    node_t* new_node = (node_t*)malloc(sizeof(node_t));
+    if (!new_node) {
+        // 메모리 할당 실패 처리
+        fprintf(stderr, "Memory allocation failed\n");
+        return;
     }
+
+    new_node->val = n;
+    new_node->next = *phead;
+    *phead = new_node;
 }
 
-void destroy(node_t* head)
-{
+void destroy(node_t* head) {
     node_t* p = head;
-
-    while(p != NULL){
-        node_t* next = p->next;
+    while (p != NULL) {
+        node_t* next = p->next; // 수정된 부분
         free(p);
         p = next;
     }
 }
 
-void insert(node_t** phead, int n)
-{
-    node_t* new_node;
+void print_node(const node_t* head) {
+    const node_t* p; // 'const'로 변경
 
-    new_node = malloc(sizeof(node_t));
-    new_node->data = n;
-
-    new_node->next = *phead;
-    *phead = new_node;
-}
-
-void remove(node_t** phead, int n)
-{
-
+    p = head;
+    while (p != NULL) {
+        printf("%d ", p->val); // 출력 후 공백 추가
+        p = p->next;
+    }
+    printf("\n"); // 모든 노드 출력 후 줄바꿈
 }
 
 int main(void) {
     node_t* head = NULL;
-    insert(&head, 1);
 
-    //print_node(head);
-
-    //destroy(head);
-
+    insert_front(&head, 1);
+    print_node(head);
+    destroy(head);
+    head = NULL;
+    
     return 0;
 }
-
