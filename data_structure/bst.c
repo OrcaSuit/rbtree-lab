@@ -36,7 +36,7 @@ void free_tree(node_t* node) {
 /*삽입, 루트노드의 존재를 확인 후 현재 노드보다 작으면 왼쪽, 크면 오른쪽에 노드를 생성해 삽입.*/
 node_t* insert(node_t* node, int value) {
     if (node == NULL) {
-        return create_node(value);
+        return create_node(value); 
     }
 
     if (value < node->value) {
@@ -92,7 +92,7 @@ node_t* delete(node_t* node, int value) {
         }
     }
 
-    return node;
+    return node;  
 }
 
 
